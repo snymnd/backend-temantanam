@@ -1,0 +1,33 @@
+{
+  "name": "temantanam_backend",
+  "version": "1.0.0",
+  "description": "## Introduction TemanTanam is a mobile application designed to increase people's knowledge about plants and guide them in planting and nurturing plants at home. The app serves as a companion for plant enthusiasts, providing information on various plant species, their benefits, and care instructions. With a vast database of plant species, TemanTanam helps users easily identify plants and learn about their specific requirements for growth and maintenance. By providing accessible and user-friendly plant-related information, TemanTanam aims to promote the benefits of having plants, encourage more people to grow their plants, and contribute to a greener environment.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "start:dev": "nodemon src/server.js",
+    "lint": "eslint ./"
+  },
+  "keywords": [],
+  "author": "C23-PS153",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snymnd/backend-temantanam.git"
+  },
+  "bugs": {
+    "url": "https://github.com/snymnd/backend-temantanam/issues"
+  },
+  "homepage": "https://github.com/snymnd/backend-temantanam#readme"
+}
