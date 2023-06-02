@@ -13,6 +13,6 @@
     "rules": {
         "no-unused-vars": "off",
         "eqeqeq": "off",
-        "no-console": "warn"
+        "no-console": "off"
     }
 }
