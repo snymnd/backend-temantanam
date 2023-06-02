@@ -1,23 +1,47 @@
 const Hapi = require("@hapi/hapi");
-const routes = require("./routes");
+const dotenv = require("dotenv");
+const firebaseAuth = require("./lib/firebaseAuth");
+const home = require("./plugins/home");
+const auth = require("./plugins/auth");
+dotenv.config();
 
-const init = async () => {
-  const server = Hapi.server({
-    port: 8000,
-    host: "localhost",
-    routes: {
-      cors: {
-        origin: ["*"],
-      },
+// Create Server
+const server = Hapi.server({
+  port: process.env.PORT || 8000,
+  host: "localhost",
+  routes: {
+    cors: {
+      origin: ["*"],
     },
-  });
+  },
+});
 
-  server.route(routes);
+async function createServer() {
+  // Register firebaseAuth plugin
+  await server.register(firebaseAuth);
+  //Initialize the firebase auth strategy and set to default auth
+  server.auth.strategy("firebase", "firebase");
+  server.auth.default("firebase");
 
-  // eslint-disable-next-line no-console
-  console.log("Server running on %s", server.info.uri);
+  // register all need plugins
+  await server.register([home, auth]);
+  await server.initialize();
+
+  return server;
+}
+
+async function startServer(server) {
   await server.start();
-  
-};
+  console.log(`Server running on ${server.info.uri}`);
+  return server;
+}
 
-init();
+process.on("unhandledRejection", (err) => {
+  console.log(err);
+  process.exit(1);
+});
+
+module.exports = {
+  createServer,
+  startServer,
+};
