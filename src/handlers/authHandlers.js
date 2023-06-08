@@ -5,9 +5,9 @@ const {
   signOut,
 } = require("firebase/auth");
 const firebaseApp = require("../lib/firebaseApp");
-const { getRandomIntId } = require("../helper");
 const bcrypt = require("bcrypt");
 const connectDb = require("../lib/dbConnection");
+const { uuidv4 } = require("@firebase/util");
 
 const auth = getAuth(firebaseApp);
 
@@ -19,13 +19,14 @@ const registerHandler = async (request, h) => {
       // hash password
       const hashedPassword = bcrypt.hashSync(password, 10);
       console.log(hashedPassword);
+      const userId = uuidv4();
 
       // save to db
       // TODO: make it to be in a transaction
       connectDb(
-        `INSERT INTO users VALUES(${getRandomIntId()}, '${name}', '${email}', '${hashedPassword}', NULL, NULL, NOW());`
+        `INSERT INTO users VALUES('${userId}', '${name}', '${email}', '${hashedPassword}', NULL, NULL, NOW());`
       ).then((res) => {
-        console.log(res);
+        console.log(res, "insert into users success");
       });
 
       // Signed in
@@ -33,7 +34,15 @@ const registerHandler = async (request, h) => {
       response = h.response({
         status: "success",
         message: "User created successfully",
-        data: user,
+        data: {
+          id: userId,
+          firebaseId: user.uid,
+          email: user.email,
+          name: name,
+          token: user.accessToken,
+          refreshToken: user.refreshToken,
+          expirationTime: user.stsTokenManager.expirationTime,
+        },
       });
       response.code(201);
     })
@@ -72,12 +81,37 @@ const loginHandler = async (request, h) => {
   let response;
   await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
+      // get user data from db
+      const query = `SELECT * FROM users WHERE email = '${email}'`;
+      let userId, userName;
+      connectDb(query).then((res) => {
+        console.log(res.rows[0], "res.row[0]");
+        if (res.rows[0]) {
+          userId = res.rows[0].id;
+          userName = res.rows[0].name;
+        } else {
+          response = h.response({
+            status: "fail",
+            message: "User not found",
+          });
+          response.code(404);
+        }
+      });
+
       // Signed in
       const user = userCredential.user;
       response = h.response({
         status: "success",
         message: "User login successfully",
-        data: user,
+        data: {
+          id: userId,
+          firebaseId: user.uid,
+          email: user.email,
+          name: userName,
+          token: user.stsTokenManager.accessToken,
+          refreshToken: user.refreshToken,
+          expirationTime: user.stsTokenManager.expirationTime,
+        },
       });
       response.code(200);
     })
