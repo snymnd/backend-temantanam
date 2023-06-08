@@ -92,9 +92,23 @@ function validateToken(token, firebaseInstance, h) {
     })
     .catch(function (error) {
       console.log(error);
-
+      let message;
+      switch (error.code) {
+        case "auth/id-token-expired":
+          message = `Token is already expired.`;
+          break;
+        case "auth/id-token-revoked":
+          message = `Token already being revoke.`;
+          break;
+        case "auth/invalid-credential":
+          message = `Credetioal is invalid.`;
+          break;
+        default:
+          message = error.code;
+          break;
+      }
       // Invalid token
-      throw Unauthorized("invalid token");
+      throw Unauthorized(message);
     });
 }
 
