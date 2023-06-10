@@ -2,12 +2,20 @@
 const connectDb = require("../lib/dbConnection");
 
 const getUserHandler = async (request, h) => {
+<<<<<<< HEAD
     const id  = request.params.userId;
+=======
+    const { id } = request.params;
+>>>>>>> 9338d39 (implement create update users)
     let response;
 
     let query = `SELECT * FROM users`;
     if (id) {
+<<<<<<< HEAD
         query += ` WHERE id = '${id}'`;
+=======
+        query += ` WHERE id = ${id}`;
+>>>>>>> 9338d39 (implement create update users)
     }
 
     const res = await connectDb(query);
@@ -24,7 +32,11 @@ const getUserHandler = async (request, h) => {
         response = h.response({
             status: "fail",
             message: "User not found"
+<<<<<<< HEAD
         }).code(404);
+=======
+        }).code(400);
+>>>>>>> 9338d39 (implement create update users)
     }
 
     return response;
@@ -78,4 +90,8 @@ const updateUserHandler = async (request, h) => {
 };
 
 
+<<<<<<< HEAD
 module.exports = { getUserHandler, updateUserHandler };
+=======
+module.exports = { getUserHandler, updateUserHandler };
+>>>>>>> 9338d39 (implement create update users)

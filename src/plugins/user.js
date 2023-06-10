@@ -9,9 +9,15 @@ module.exports = userPlugin = {
     server.route([
       {
         method: "GET",
+<<<<<<< HEAD
         path: "/user/{userId}",
         config: {
           // auth: false,
+=======
+        path: "/user/{userId?}",
+        config: {
+          auth: false,
+>>>>>>> 9338d39 (implement create update users)
         },
         handler: getUserHandler,
       },
@@ -19,7 +25,11 @@ module.exports = userPlugin = {
         method: "PUT",
         path: "/user/update/{userId}",
         config: {
+<<<<<<< HEAD
           // auth: false,
+=======
+          auth: false,
+>>>>>>> 9338d39 (implement create update users)
         },
         handler: updateUserHandler,
       },
