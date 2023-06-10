@@ -11,7 +11,7 @@ module.exports = userPlugin = {
         method: "GET",
         path: "/user/{userId?}",
         config: {
-          auth: false,
+          // auth: false,
         },
         handler: getUserHandler,
       },
@@ -19,7 +19,7 @@ module.exports = userPlugin = {
         method: "PUT",
         path: "/user/update/{userId}",
         config: {
-          auth: false,
+          // auth: false,
         },
         handler: updateUserHandler,
       },
