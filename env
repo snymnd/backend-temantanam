@@ -1,0 +1,8 @@
+# Firebase Admin SDK file path
+FIREBASE_ADMIN_SDK = "my-temantanam-dev-firebase-adminsdk.secret.json"
+
+PGUSER='postgres'
+PGHOST=34.101.113.67
+PGPASSWORD='admin'
+PGDATABASE='temantanam'
+PGPORT=5432
