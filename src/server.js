@@ -4,9 +4,12 @@ const firebaseAuth = require("./lib/firebaseAuth");
 const home = require("./plugins/home");
 const auth = require("./plugins/auth");
 const user = require("./plugins/user");
+<<<<<<< HEAD
 const plant = require("./plugins/plant");
 const collection = require("./plugins/collection");
 const history = require("./plugins/history");
+=======
+>>>>>>> 9338d39 (implement create update users)
 dotenv.config();
 
 // Create Server
@@ -28,7 +31,11 @@ async function createServer() {
   server.auth.default("firebase");
 
   // register all need plugins
+<<<<<<< HEAD
   await server.register([home, auth, user, plant, collection, history]);
+=======
+  await server.register([home, auth, user]);
+>>>>>>> 9338d39 (implement create update users)
   await server.initialize();
 
   return server;
