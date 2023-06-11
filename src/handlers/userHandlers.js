@@ -24,7 +24,7 @@ const getUserHandler = async (request, h) => {
         response = h.response({
             status: "fail",
             message: "User not found"
-        }).code(400);
+        }).code(404);
     }
 
     return response;
