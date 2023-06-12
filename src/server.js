@@ -5,8 +5,11 @@ const home = require("./plugins/home");
 const auth = require("./plugins/auth");
 const user = require("./plugins/user");
 const plant = require("./plugins/plant");
+<<<<<<< HEAD
 const collection = require("./plugins/collection");
 const history = require("./plugins/history");
+=======
+>>>>>>> a60bb26 (implement get plant)
 dotenv.config();
 
 // Create Server
