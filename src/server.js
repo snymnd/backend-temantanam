@@ -4,6 +4,7 @@ const firebaseAuth = require("./lib/firebaseAuth");
 const home = require("./plugins/home");
 const auth = require("./plugins/auth");
 const user = require("./plugins/user");
+const plant = require("./plugins/plant");
 dotenv.config();
 
 // Create Server
@@ -20,12 +21,12 @@ const server = Hapi.server({
 async function createServer() {
   // Register firebaseAuth plugin
   await server.register(firebaseAuth);
-  //Initialize the firebase auth strategy and set to default auth
+  // Initialize the firebase auth strategy and set to default auth
   server.auth.strategy("firebase", "firebase");
   server.auth.default("firebase");
 
   // register all need plugins
-  await server.register([home, auth, user]);
+  await server.register([home, auth, user, plant]);
   await server.initialize();
 
   return server;
