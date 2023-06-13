@@ -15,36 +15,41 @@ const registerHandler = async (request, h) => {
   const { email, password, name } = request.payload;
   let response;
   await createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       // hash password
       const hashedPassword = bcrypt.hashSync(password, 10);
       console.log(hashedPassword);
       const userId = uuidv4();
 
-      // save to db
       // TODO: make it to be in a transaction
-      connectDb(
-        `INSERT INTO users VALUES('${userId}', '${name}', '${email}', '${hashedPassword}', NULL, NULL, NOW());`
-      ).then((res) => {
-        console.log(res, "insert into users success");
-      });
-
-      // Signed in
-      const user = userCredential.user;
-      response = h.response({
-        status: "success",
-        message: "User created successfully",
-        data: {
-          id: userId,
-          firebaseId: user.uid,
-          email: user.email,
-          name: name,
-          token: user.accessToken,
-          refreshToken: user.refreshToken,
-          expirationTime: user.stsTokenManager.expirationTime,
-        },
-      });
-      response.code(201);
+      const insertUserQuery = `INSERT INTO users VALUES('${userId}', '${name}', '${email}', '${hashedPassword}', NULL, NULL, NOW());`;
+      await connectDb(insertUserQuery)
+        .then((res) => {
+          console.log(res, "insert into users success");
+          // Signed in
+          const user = userCredential.user;
+          response = h.response({
+            status: "success",
+            message: "User created successfully",
+            data: {
+              id: userId,
+              firebaseId: user.uid,
+              email: user.email,
+              name: name,
+              token: user.accessToken,
+              refreshToken: user.refreshToken,
+              expirationTime: user.stsTokenManager.expirationTime,
+            },
+          });
+          response.code(201);
+        })
+        .catch((err) => {
+          response = h.response({
+            status: "fail",
+            message: `Database error: ${err.message}`,
+          });
+          response.code(500);
+        });
     })
     .catch((error) => {
       let message;
@@ -80,40 +85,45 @@ const loginHandler = async (request, h) => {
 
   let response;
   await signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       // get user data from db
-      const query = `SELECT * FROM users WHERE email = '${email}'`;
-      let userId, userName;
-      connectDb(query).then((res) => {
-        console.log(res.rows[0], "res.row[0]");
-        if (res.rows[0]) {
-          userId = res.rows[0].id;
-          userName = res.rows[0].name;
-        } else {
+      const getUserQuery = `SELECT * FROM users WHERE email = '${email}'`;
+      await connectDb(getUserQuery)
+        .then((res) => {
+          const userRow = res.rows[0];
+          console.log("res.row[0]");
+          if (userRow) {
+            // Signed in
+            const user = userCredential.user;
+            response = h.response({
+              status: "success",
+              message: "User login successfully",
+              data: {
+                id: userRow.id,
+                firebaseId: user.uid,
+                email: user.email,
+                name: userRow.name,
+                token: user.stsTokenManager.accessToken,
+                refreshToken: user.refreshToken,
+                expirationTime: user.stsTokenManager.expirationTime,
+              },
+            });
+            response.code(200);
+          } else {
+            response = h.response({
+              status: "fail",
+              message: "User not found",
+            });
+            response.code(404);
+          }
+        })
+        .catch((err) => {
           response = h.response({
             status: "fail",
-            message: "User not found",
+            message: `Database error: ${err.message}`,
           });
-          response.code(404);
-        }
-      });
-
-      // Signed in
-      const user = userCredential.user;
-      response = h.response({
-        status: "success",
-        message: "User login successfully",
-        data: {
-          id: userId,
-          firebaseId: user.uid,
-          email: user.email,
-          name: userName,
-          token: user.stsTokenManager.accessToken,
-          refreshToken: user.refreshToken,
-          expirationTime: user.stsTokenManager.expirationTime,
-        },
-      });
-      response.code(200);
+          response.code(500);
+        });
     })
     .catch((error) => {
       let message;
