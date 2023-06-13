@@ -10,7 +10,7 @@ module.exports = plantPlugin = {
           method: "GET",
           path: "/plant/{plantName}",
           config: {
-            auth: false,
+            // auth: false,
           },
           handler: getPlantHandler,
         },
