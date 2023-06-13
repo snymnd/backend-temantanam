@@ -8,7 +8,7 @@ module.exports = plantPlugin = {
       server.route([
         {
           method: "GET",
-          path: "/plant/{plantName}",
+          path: "/plant/{plantName}/{userId}",
           config: {
             // auth: false,
           },

@@ -20,7 +20,7 @@ const {
             method: "POST",
             path: "/collection/{userId}",
             config: {
-            //   auth: false,
+              // auth: false,
             },
             handler: addCollectionHandler,
         },
@@ -28,7 +28,7 @@ const {
             method: "DELETE",
             path: "/collection/delete/{collectionId}",
             config: {
-            //   auth: false,
+              // auth: false,
             },
             handler: deleteCollectionHandler,
         },

@@ -5,9 +5,11 @@ const getCollectionHandler = async (request, h) => {
     const userId = request.params.userId;
     let response;
 
-    let query = `SELECT * FROM user_plant_collection`;
+    let query = `SELECT uc.id AS collection_id, p.id AS plant_id, p.name AS plant_name, p.species AS plant_species, p.image_url AS plant_image_url
+                FROM user_plant_collection uc
+                JOIN plant p ON uc.plant_id = p.id`
     if (userId) {
-        query += ` WHERE user_id = '${userId}'`;
+        query += ` WHERE uc.user_id = '${userId}'`;
     }
 
     const res = await connectDb(query);
@@ -43,8 +45,11 @@ const addCollectionHandler = async (request, h) => {
     const res = await connectDb(query);
 
     if (res && res.rowCount > 0) {
-        const getUserCollection = await connectDb(`SELECT * FROM user_plant_collection WHERE user_id = '${userId}'::uuid`);
-        const userCollection = getUserCollection.rows[0];
+        const getUserCollection = await connectDb(`SELECT uc.id AS collection_id, p.id AS plant_id, p.name AS plant_name, p.species AS plant_species, p.image_url AS plant_image_url
+                                                    FROM user_plant_collection uc
+                                                    JOIN plant p ON uc.plant_id = p.id
+                                                    WHERE uc.user_id = '${userId}'`);
+        const userCollection = getUserCollection.rows;
         response = h.response({
             status: "success",
             message: "Successfully add plant to collection",
