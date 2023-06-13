@@ -2,12 +2,12 @@
 const connectDb = require("../lib/dbConnection");
 
 const getUserHandler = async (request, h) => {
-    const { id } = request.params;
+    const id  = request.params.userId;
     let response;
 
     let query = `SELECT * FROM users`;
     if (id) {
-        query += ` WHERE id = ${id}`;
+        query += ` WHERE id = '${id}'`;
     }
 
     const res = await connectDb(query);
