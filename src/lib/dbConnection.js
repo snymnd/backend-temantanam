@@ -17,7 +17,7 @@ const connectDb = async (query) => {
     return res;
   } catch (error) {
     console.log(error, "err");
-    return error;
+    throw error;
   }
 };
 
