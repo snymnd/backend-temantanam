@@ -9,9 +9,9 @@ module.exports = userPlugin = {
     server.route([
       {
         method: "GET",
-        path: "/user/{userId?}",
+        path: "/user/{userId}",
         config: {
-          // auth: false,
+          auth: false,
         },
         handler: getUserHandler,
       },
