@@ -2,13 +2,13 @@ const connectDb = require("../lib/dbConnection");
 const { uuidv4 } = require("@firebase/util");
 
 const getPlantHandler = async (request, h) => {
-    const plantName = request.params.plantName;
+    const classification = request.params.classification;
     const userId = request.params.userId;
     let response;
 
     let query = `SELECT * FROM plant`;
-    if (plantName) {
-        query += ` WHERE NAME = '${plantName}'`;
+    if (classification) {
+        query += ` WHERE CLASSIFICATION = '${classification}'`;
     }
 
     const res = await connectDb(query);
