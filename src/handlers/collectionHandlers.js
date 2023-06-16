@@ -5,7 +5,7 @@ const getCollectionHandler = async (request, h) => {
     const userId = request.params.userId;
     let response;
 
-    let query = `SELECT uc.id AS collection_id, p.id AS plant_id, p.name AS plant_name, p.species AS plant_species, p.image_url AS plant_image_url
+    let query = `SELECT uc.id AS collection_id, p.id AS plant_id, p.name AS plant_name, p.species AS plant_species, p.image_url AS plant_image_url, p.classification AS plant_classification
                 FROM user_plant_collection uc
                 JOIN plant p ON uc.plant_id = p.id`
     if (userId) {
@@ -45,7 +45,7 @@ const addCollectionHandler = async (request, h) => {
     const res = await connectDb(query);
 
     if (res && res.rowCount > 0) {
-        const getUserCollection = await connectDb(`SELECT uc.id AS collection_id, p.id AS plant_id, p.name AS plant_name, p.species AS plant_species, p.image_url AS plant_image_url
+        const getUserCollection = await connectDb(`SELECT uc.id AS collection_id, p.id AS plant_id, p.name AS plant_name, p.species AS plant_species, p.image_url AS plant_image_url, p.classification AS plant_classification
                                                     FROM user_plant_collection uc
                                                     JOIN plant p ON uc.plant_id = p.id
                                                     WHERE uc.user_id = '${userId}'`);
