@@ -1,7 +1,7 @@
 const connectDb = require("../lib/dbConnection");
 const { uuidv4 } = require("@firebase/util");
 
-const getPlantHandler = async (request, h) => {
+const getPlantByClassificationHandler = async (request, h) => {
     const classification = request.params.classification;
     const userId = request.params.userId;
     let response;
@@ -40,4 +40,37 @@ const getPlantHandler = async (request, h) => {
     return response;
 };
 
-module.exports = { getPlantHandler };
+const getPlantByIdHandler = async (request, h) => {
+    const id = request.params.plantId;
+    let response;
+  
+    let query = `SELECT * FROM plant`;
+    if (id) {
+      query += ` WHERE id = '${id}'`;
+    }
+  
+    const res = await connectDb(query);
+    const plant = res.rows[0];
+    console.log(plant);
+  
+    if (plant !== undefined) {
+      response = h
+        .response({
+          status: "success",
+          message: "User found",
+          data: plant,
+        })
+        .code(200);
+    } else {
+      response = h
+        .response({
+          status: "fail",
+          message: "User not found",
+        })
+        .code(404);
+    }
+  
+    return response;
+  };
+
+module.exports = { getPlantByClassificationHandler, getPlantByIdHandler };

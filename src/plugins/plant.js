@@ -1,5 +1,6 @@
 const {
-    getPlantHandler,
+    getPlantByClassificationHandler,
+    getPlantByIdHandler,
   } = require("../handlers/plantHandlers");
 
 module.exports = plantPlugin = {
@@ -12,7 +13,15 @@ module.exports = plantPlugin = {
           config: {
             // auth: false,
           },
-          handler: getPlantHandler,
+          handler: getPlantByClassificationHandler,
+        },
+        {
+          method: "GET",
+          path: "/plant/{plantId}",
+          config: {
+            auth: false,
+          },
+          handler: getPlantByIdHandler,
         },
       ]);
     },
