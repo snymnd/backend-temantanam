@@ -40,13 +40,13 @@ const getPlantByClassificationHandler = async (request, h) => {
     return response;
 };
 
-const getPlantByIdHandler = async (request, h) => {
-    const id = request.params.plantId;
+const getPlantByNameHandler = async (request, h) => {
+    const name = request.params.plantName;
     let response;
   
     let query = `SELECT * FROM plant`;
-    if (id) {
-      query += ` WHERE id = '${id}'`;
+    if (name) {
+      query += ` WHERE name = '${name}'`;
     }
   
     const res = await connectDb(query);
@@ -57,7 +57,7 @@ const getPlantByIdHandler = async (request, h) => {
       response = h
         .response({
           status: "success",
-          message: "User found",
+          message: "Plant found",
           data: plant,
         })
         .code(200);
@@ -65,7 +65,7 @@ const getPlantByIdHandler = async (request, h) => {
       response = h
         .response({
           status: "fail",
-          message: "User not found",
+          message: "Plant not found",
         })
         .code(404);
     }
@@ -73,4 +73,4 @@ const getPlantByIdHandler = async (request, h) => {
     return response;
   };
 
-module.exports = { getPlantByClassificationHandler, getPlantByIdHandler };
+module.exports = { getPlantByClassificationHandler, getPlantByNameHandler };
